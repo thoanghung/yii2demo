@@ -17,6 +17,7 @@ use yii\web\IdentityInterface;
  * @property string $email
  * @property string $auth_key
  * @property integer $status
+ * @property integer $role
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
@@ -25,6 +26,8 @@ class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
+    const ROLE_USER = 10;
+    const ROLE_ADMIN = 20;
 
 
     /**
@@ -32,7 +35,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function tableName()
     {
-        return '{{%user}}';
+        return 'users';
     }
 
     /**
@@ -52,6 +55,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
+            ['role', 'default', 'value' => self::ROLE_USER],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
         ];
     }

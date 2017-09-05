@@ -45,6 +45,7 @@ return [
           'rules' => [
             // '' => 'site/index',
             '<controller:\w+>/<action:\w+>/' => '<controller>/<action>',
+            '/login' => '/site/login'
           ],
         ],
       ],

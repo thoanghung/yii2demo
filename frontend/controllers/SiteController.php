@@ -12,6 +12,7 @@ use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
 use frontend\models\ContactForm;
+use common\components\AccessRule;
 
 /**
  * Site controller
@@ -26,7 +27,7 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
+                'only' => ['logout', 'signup', 'admin', 'user'],
                 'rules' => [
                     [
                         'actions' => ['signup'],
@@ -34,7 +35,7 @@ class SiteController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'admin', 'user'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -72,7 +73,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-      // die('here');
+      $this->layout = 'main_bak';
         return $this->render('index');
     }
 
@@ -83,13 +84,15 @@ class SiteController extends Controller
      */
     public function actionLogin()
     {
+      $this->layout = 'main_blank';
         if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+            // return $this->goHome();
+          return $this->redirect('/dashboard');
         }
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            return $this->redirect('/dashboard');
         } else {
             return $this->render('login', [
                 'model' => $model,
@@ -106,7 +109,7 @@ class SiteController extends Controller
     {
         Yii::$app->user->logout();
 
-        return $this->goHome();
+        return $this->redirect('/login');
     }
 
     /**
@@ -210,5 +213,13 @@ class SiteController extends Controller
         return $this->render('resetPassword', [
             'model' => $model,
         ]);
+    }
+
+    public function actionAdmin(){
+      echo 'this is admin page';
+    }
+
+    public function actionUser(){
+      echo 'this is user page';
     }
 }
